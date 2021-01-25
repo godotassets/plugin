@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://logo-256.png" type="Texture" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Layout" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="HBoxContainer" parent="Layout"]
+margin_right = 1024.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+custom_constants/separation = 16
+
+[node name="Logo" type="TextureButton" parent="Layout/Header"]
+margin_right = 48.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 48, 48 )
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource( 1 )
+expand = true
+
+[node name="Spacer" type="Control" parent="Layout/Header"]
+margin_left = 64.0
+margin_right = 877.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+
+[node name="RefreshButton" type="Button" parent="Layout/Header"]
+margin_left = 893.0
+margin_top = 14.0
+margin_right = 953.0
+margin_bottom = 34.0
+size_flags_vertical = 4
+text = "Refresh"
+
+[node name="LogoutButton" type="Button" parent="Layout/Header"]
+margin_left = 969.0
+margin_top = 14.0
+margin_right = 1024.0
+margin_bottom = 34.0
+size_flags_vertical = 4
+text = "Logout"
+
+[node name="Grid" type="GridContainer" parent="Layout"]
+margin_top = 52.0
+margin_right = 1024.0
+margin_bottom = 52.0
