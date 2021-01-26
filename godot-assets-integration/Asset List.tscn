@@ -98,6 +98,6 @@ margin_bottom = 532.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 8
-custom_constants/hseparation = 8
+custom_constants/hseparation = 16
 columns = 2
 [connection signal="pressed" from="Layout/Padding/Header/Logo" to="Layout/Padding/Header/Logo" method="_on_Logo_pressed"]
