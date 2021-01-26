@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://logo-256.png" type="Texture" id=1]
+[ext_resource path="res://Logo.gd" type="Script" id=2]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -16,43 +17,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Header" type="HBoxContainer" parent="Layout"]
+[node name="Padding" type="MarginContainer" parent="Layout"]
 margin_right = 1024.0
-margin_bottom = 48.0
+margin_bottom = 56.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 4
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 4
+
+[node name="Header" type="HBoxContainer" parent="Layout/Padding"]
+margin_left = 16.0
+margin_top = 4.0
+margin_right = 1008.0
+margin_bottom = 52.0
 size_flags_horizontal = 3
 custom_constants/separation = 16
 
-[node name="Logo" type="TextureButton" parent="Layout/Header"]
+[node name="Logo" type="TextureButton" parent="Layout/Padding/Header"]
 margin_right = 48.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 48, 48 )
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource( 1 )
 expand = true
+script = ExtResource( 2 )
 
-[node name="Spacer" type="Control" parent="Layout/Header"]
+[node name="Spacer" type="Control" parent="Layout/Padding/Header"]
 margin_left = 64.0
-margin_right = 877.0
+margin_right = 845.0
 margin_bottom = 48.0
 size_flags_horizontal = 3
 
-[node name="RefreshButton" type="Button" parent="Layout/Header"]
-margin_left = 893.0
+[node name="RefreshButton" type="Button" parent="Layout/Padding/Header"]
+margin_left = 861.0
 margin_top = 14.0
-margin_right = 953.0
+margin_right = 921.0
 margin_bottom = 34.0
 size_flags_vertical = 4
 text = "Refresh"
 
-[node name="LogoutButton" type="Button" parent="Layout/Header"]
-margin_left = 969.0
+[node name="LogoutButton" type="Button" parent="Layout/Padding/Header"]
+margin_left = 937.0
 margin_top = 14.0
-margin_right = 1024.0
+margin_right = 992.0
 margin_bottom = 34.0
 size_flags_vertical = 4
 text = "Logout"
 
 [node name="Grid" type="GridContainer" parent="Layout"]
-margin_top = 52.0
+margin_top = 60.0
 margin_right = 1024.0
-margin_bottom = 52.0
+margin_bottom = 600.0
+size_flags_vertical = 3
+[connection signal="pressed" from="Layout/Padding/Header/Logo" to="Layout/Padding/Header/Logo" method="_on_Logo_pressed"]
