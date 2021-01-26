@@ -52,6 +52,6 @@ fit_content_height = true
 margin_top = 439.0
 margin_right = 256.0
 margin_bottom = 453.0
-text = "Get an access token"
+text = "How do I get a token?"
 script = ExtResource( 2 )
 [connection signal="pressed" from="CenterColumn/LinkButton" to="CenterColumn/LinkButton" method="_on_LinkButton_pressed"]
