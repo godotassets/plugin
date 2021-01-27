@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="godot-assets-integration"
-run/main_scene="res://Asset List.tscn"
+run/main_scene="res://Login.tscn"
 config/icon="res://icon.png"
 
 [rendering]
