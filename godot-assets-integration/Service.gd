@@ -32,9 +32,50 @@ func logout():
 func is_logged_in():
 	return _refresh_token != ""
 	
+func get_list():
+	var update = _update_id_token()
+	
+	if update is GDScriptFunctionState:
+		yield(update, "completed")
+	
+	var url = _path % "/api/purchase"
+	var headers = ["Authorization: Bearer %s" % _id_token]
+	
+	_req.request(url, headers, true, HTTPClient.METHOD_GET)
+	
+	var result = yield(_req, "request_completed")
+	var response_code = result[1]
+	var body = result[3]
+	
+	if (response_code != 200):
+		var msg = "godot-assets-integration received response_code of %s from server" % response_code
+		_error(msg)
+		return
+		
+	return JSON.parse(body.get_string_from_utf8()).result
+
+func load_image_from_url(url: String):
+	var req = HTTPRequest.new()
+	add_child(req)
+	
+	req.request(url, [], true, HTTPClient.METHOD_GET)
+	
+	var result = yield(req, "request_completed")
+	var response_code = result[1]
+	var body = result[3]
+	
+	if response_code != 200:
+		_error("Unable to load image %s" % url)
+		return null
+	
+	var image = Image.new()
+	image.load_jpg_from_buffer(body)
+	
+	return image
+
 func _update_id_token():
 	if (OS.get_system_time_secs() < _expires):
-		return
+		return 
 	
 	var url = _path % "/api/plugin/login"
 	var headers = ["Content-Type: application/json"]

@@ -101,4 +101,5 @@ custom_constants/vseparation = 8
 custom_constants/hseparation = 16
 columns = 2
 [connection signal="pressed" from="Layout/Padding/Header/Logo" to="Layout/Padding/Header/Logo" method="_on_Logo_pressed"]
+[connection signal="pressed" from="Layout/Padding/Header/RefreshButton" to="." method="_on_RefreshButton_pressed"]
 [connection signal="pressed" from="Layout/Padding/Header/LogoutButton" to="." method="_on_LogoutButton_pressed"]
