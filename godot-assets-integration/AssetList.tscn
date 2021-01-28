@@ -2,9 +2,9 @@
 
 [ext_resource path="res://logo-256.png" type="Texture" id=1]
 [ext_resource path="res://Logo.gd" type="Script" id=2]
-[ext_resource path="res://Asset List.gd" type="Script" id=4]
+[ext_resource path="res://AssetList.gd" type="Script" id=4]
 
-[node name="Control" type="Control"]
+[node name="AssetList" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 4 )
@@ -101,3 +101,4 @@ custom_constants/vseparation = 8
 custom_constants/hseparation = 16
 columns = 2
 [connection signal="pressed" from="Layout/Padding/Header/Logo" to="Layout/Padding/Header/Logo" method="_on_Logo_pressed"]
+[connection signal="pressed" from="Layout/Padding/Header/LogoutButton" to="." method="_on_LogoutButton_pressed"]
