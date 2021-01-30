@@ -19,20 +19,13 @@ func _refresh_list():
 	
 	for asset in assets:
 		var instance = AssetResource.instance()
+		instance.asset_id = asset["asset"]["id"]
+		instance.asset_name = asset["asset"]["name"]
+		instance.image_path = asset["asset"]["imagePath"]
+		instance.publisher = asset["asset"]["publisher"]
+		instance.service = _service
+		
 		$Layout/Scroll/Content/List.add_child(instance)
-		
-		instance.get_node("Padding/Content/Name").text = asset["asset"]["name"]
-		instance.get_node("Padding/Content/Publisher").text = asset["asset"]["publisher"]
-		
-		var image = yield(_service.load_image_from_url(asset["asset"]["imagePath"]), "completed")
-		
-		if image == null:
-			continue
-			
-		var texture = ImageTexture.new()
-		texture.create_from_image(image)
-		
-		instance.get_node("Image").texture = texture
 	
 	$Layout/Padding/Header/RefreshButton.disabled = false
 

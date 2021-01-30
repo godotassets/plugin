@@ -1,9 +1,12 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Asset.gd" type="Script" id=1]
 
 [node name="Asset" type="HBoxContainer"]
 margin_right = 512.0
 margin_bottom = 81.0
 size_flags_horizontal = 3
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -35,37 +38,48 @@ size_flags_horizontal = 3
 alignment = 1
 
 [node name="Name" type="RichTextLabel" parent="Padding/Content"]
-margin_top = 6.0
+margin_top = 14.0
 margin_right = 277.0
-margin_bottom = 36.0
+margin_bottom = 29.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
-text = "ANGST / Surrounding Horror - Designed Soundscapes"
 fit_content_height = true
 
 [node name="Version" type="RichTextLabel" parent="Padding/Content"]
-margin_top = 40.0
+margin_top = 33.0
 margin_right = 277.0
-margin_bottom = 55.0
+margin_bottom = 48.0
 custom_colors/default_color = Color( 0.752941, 0.752941, 0.752941, 1 )
-text = "1.0.0"
 fit_content_height = true
 __meta__ = {
 "_editor_description_": ""
 }
 
 [node name="Publisher" type="RichTextLabel" parent="Padding/Content"]
-margin_top = 59.0
+margin_top = 52.0
 margin_right = 277.0
-margin_bottom = 74.0
+margin_bottom = 67.0
 custom_colors/default_color = Color( 0.752941, 0.752941, 0.752941, 1 )
-text = "Sound Bits"
 fit_content_height = true
 
-[node name="DownloadButton" type="Button" parent="."]
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
 margin_left = 437.0
-margin_top = 30.0
 margin_right = 512.0
-margin_bottom = 50.0
+margin_bottom = 81.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="DownloadButton" type="Button" parent="ButtonContainer"]
+margin_top = 16.0
+margin_right = 75.0
+margin_bottom = 36.0
 size_flags_vertical = 4
 text = "Download"
+
+[node name="InstallButton" type="Button" parent="ButtonContainer"]
+margin_top = 44.0
+margin_right = 75.0
+margin_bottom = 64.0
+size_flags_vertical = 4
+text = "Install"
+[connection signal="pressed" from="ButtonContainer/DownloadButton" to="." method="_on_DownloadButton_pressed"]

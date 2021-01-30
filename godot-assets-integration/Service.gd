@@ -71,8 +71,57 @@ func load_image_from_url(url: String):
 	var image = Image.new()
 	image.load_jpg_from_buffer(body)
 	
+	remove_child(req)
+	req.queue_free()
+	
 	return image
 
+func download_asset(asset_id: String, asset_name: String):
+	var update = _update_id_token()
+	
+	if update is GDScriptFunctionState:
+		yield(update, "completed")
+		
+	var req = HTTPRequest.new()
+	add_child(req)
+	
+	var url = _path % "/api/purchase/download/%s" % asset_id
+	var headers = ["Authorization: Bearer %s" % _id_token]
+	
+	req.request(url, headers, true, HTTPClient.METHOD_GET)
+	
+	var result = yield(req, "request_completed")
+	var response_code = result[1]
+	var body = result[3]
+	
+	if response_code != 200:
+		_error("Unable to get download link for asset %s" % asset_id)
+		return null
+
+	url = body.get_string_from_utf8()
+	
+	var regex = RegEx.new()
+	regex.compile("[^\\w\\s]");
+	
+	var filename = str(asset_id, "-", regex.sub(asset_name, "", true), ".zip")
+	
+	req.download_file = _file_folder % filename
+	
+	req.request(url, [], true, HTTPClient.METHOD_GET)
+	
+	result = yield(req, "request_completed")
+	response_code = result[1]
+	body = result[3]
+	
+	if response_code != 200:
+		_error("Unable to download asset %s" % asset_id)
+		return null
+	
+	remove_child(req)
+	req.queue_free()
+	
+	return req.download_file
+	
 func _update_id_token():
 	if (OS.get_system_time_secs() < _expires):
 		return 
