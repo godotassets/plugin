@@ -13,6 +13,8 @@ func _on_LogoutButton_pressed():
 	get_tree().change_scene("res://Login.tscn")
 	
 func _refresh_list():
+	$Layout/Padding/Header/RefreshButton.disabled = true
+	
 	var assets = yield(_service.get_list(), "completed")
 	
 	for asset in assets:
@@ -31,6 +33,8 @@ func _refresh_list():
 		texture.create_from_image(image)
 		
 		instance.get_node("Image").texture = texture
+	
+	$Layout/Padding/Header/RefreshButton.disabled = false
 
 
 func _on_RefreshButton_pressed():
