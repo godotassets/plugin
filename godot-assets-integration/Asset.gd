@@ -7,7 +7,7 @@ var publisher: String
 var service: Service
 
 func _ready():
-	$ButtonContainer/InstallButton.visible = false
+	$ButtonContainer/InstallButton.visible = service._is_asset_downloaded(asset_id)
 	$Padding/Content/Name.text = asset_name
 	$Padding/Content/Publisher.text = publisher
 	
@@ -32,3 +32,13 @@ func _on_DownloadButton_pressed():
 	
 	$ButtonContainer/DownloadButton.disabled = false
 	$ButtonContainer/InstallButton.visible = result != null
+
+
+func _on_InstallButton_pressed():
+	$FileDialog.popup_centered(Vector2(720,480))
+
+func _on_FileDialog_dir_selected(dir: String):
+	$ButtonContainer/InstallButton.disabled = false
+	$ButtonContainer/DownloadButton.disabled = false
+	
+	service.install_asset(asset_id, dir)

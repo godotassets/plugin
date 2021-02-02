@@ -2,9 +2,11 @@ extends Node
 class_name Service
 
 onready var _req = HTTPRequest.new()
+onready var _unzip = load("res://unzip.gd").new()
 
 const _path: String = "http://127.0.0.1:7071%s"
 const _file_folder = "user://godot-asset-integration/%s"
+const _asset_folder = _file_folder % "assets/%s"
 const _file_path = _file_folder % "token"
 
 var _expires: int = 0
@@ -105,7 +107,9 @@ func download_asset(asset_id: String, asset_name: String):
 	
 	var filename = str(asset_id, "-", regex.sub(asset_name, "", true), ".zip")
 	
-	req.download_file = _file_folder % filename
+	var dir = Directory.new()
+	dir.make_dir_recursive(_asset_folder % "")
+	req.download_file = _asset_folder % filename
 	
 	req.request(url, [], true, HTTPClient.METHOD_GET)
 	
@@ -121,7 +125,38 @@ func download_asset(asset_id: String, asset_name: String):
 	req.queue_free()
 	
 	return req.download_file
+
+func install_asset(asset_id: String, directory: String):
+	var asset_file = _find_asset_download_file(asset_id)
 	
+	_unzip.unzip(asset_file, str(directory, "/"))
+
+func _is_asset_downloaded(asset_id: String):
+	return _find_asset_download_file(asset_id ) != null
+
+func _find_asset_download_file(asset_id: String):
+	var result = null
+	var dir = Directory.new()
+	var err = dir.open(_asset_folder % "")
+	
+	if err != OK:
+		return result
+	
+	dir.list_dir_begin()
+	
+	while true:
+		var file = dir.get_next()
+		
+		if (file == ""):
+			break
+		elif file.begins_with("%s-" % asset_id):
+			result = _asset_folder % file
+			break
+	
+	dir.list_dir_end()
+	
+	return result
+
 func _update_id_token():
 	if (OS.get_system_time_secs() < _expires):
 		return 
@@ -166,7 +201,7 @@ func _load_refresh_token():
 func _save_refresh_token():
 	var file = File.new()
 	
-	Directory.new().make_dir_recursive(_file_folder)
+	Directory.new().make_dir_recursive(_file_folder % "")
 	
 	var err = file.open_encrypted_with_pass(_file_path, File.WRITE, OS.get_unique_id())
 	
