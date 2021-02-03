@@ -1,7 +1,6 @@
 extends Node
 class_name Service
 
-onready var _req = HTTPRequest.new()
 onready var _unzip = load("res://unzip.gd").new()
 
 const _path: String = "http://127.0.0.1:7071%s"
@@ -15,7 +14,6 @@ var _token_type: String = ""
 var _refresh_token: String = ""
 
 func _ready():
-	add_child(_req)
 	_load_refresh_token()
 	
 func login(access_token: String):
@@ -40,21 +38,30 @@ func get_list():
 	if update is GDScriptFunctionState:
 		yield(update, "completed")
 	
+	var req = HTTPRequest.new()
+	add_child(req)
+	
 	var url = _path % "/api/purchase"
 	var headers = ["Authorization: Bearer %s" % _id_token]
 	
-	_req.request(url, headers, true, HTTPClient.METHOD_GET)
+	req.request(url, headers, true, HTTPClient.METHOD_GET)
 	
-	var result = yield(_req, "request_completed")
-	var response_code = result[1]
-	var body = result[3]
+	var response = yield(req, "request_completed")
+	var response_code = response[1]
+	var body = response[3]
 	
+	var result = null
+
 	if (response_code != 200):
 		var msg = "godot-assets-integration received response_code of %s from server" % response_code
 		_error(msg)
-		return
+	else:		
+		result = JSON.parse(body.get_string_from_utf8()).result
 		
-	return JSON.parse(body.get_string_from_utf8()).result
+	remove_child(req)
+	req.queue_free()
+	
+	return result
 
 func load_image_from_url(url: String):
 	var req = HTTPRequest.new()
@@ -92,9 +99,9 @@ func download_asset(asset_id: String, asset_name: String):
 	
 	req.request(url, headers, true, HTTPClient.METHOD_GET)
 	
-	var result = yield(req, "request_completed")
-	var response_code = result[1]
-	var body = result[3]
+	var response = yield(req, "request_completed")
+	var response_code = response[1]
+	var body = response[3]
 	
 	if response_code != 200:
 		_error("Unable to get download link for asset %s" % asset_id)
@@ -113,23 +120,32 @@ func download_asset(asset_id: String, asset_name: String):
 	
 	req.request(url, [], true, HTTPClient.METHOD_GET)
 	
-	result = yield(req, "request_completed")
-	response_code = result[1]
-	body = result[3]
+	response = yield(req, "request_completed")
+	response_code = response[1]
+	body = response[3]
+	
+	var result = null
 	
 	if response_code != 200:
+		remove_asset(asset_id)
 		_error("Unable to download asset %s" % asset_id)
-		return null
-	
+	else:
+		result = req.download_file
+		
 	remove_child(req)
 	req.queue_free()
 	
-	return req.download_file
+	return response
 
 func install_asset(asset_id: String, directory: String):
 	var asset_file = _find_asset_download_file(asset_id)
 	
 	_unzip.unzip(asset_file, str(directory, "/"))
+
+func remove_asset(asset_id: String):
+	var path = _find_asset_download_file(asset_id)
+	
+	Directory.new().remove(path)
 
 func _is_asset_downloaded(asset_id: String):
 	return _find_asset_download_file(asset_id ) != null
@@ -168,25 +184,30 @@ func _update_id_token():
 		"token": _refresh_token
 	})
 	
-	_req.request(url, headers, true, HTTPClient.METHOD_POST, json)
+	var req = HTTPRequest.new()
+	add_child(req)
 	
-	var result = yield(_req, "request_completed")
-	var response_code = result[1]
-	var body = result[3]
+	req.request(url, headers, true, HTTPClient.METHOD_POST, json)
+	
+	var response = yield(req, "request_completed")
+	var response_code = response[1]
+	var body = response[3]
 	
 	if (response_code != 200):
 		var msg = "godot-assets-integration received response_code of %s from server" % response_code
 		_error(msg)
-		return
+	else:
+		var data = JSON.parse(body.get_string_from_utf8()).result
 		
-	var data = JSON.parse(body.get_string_from_utf8()).result
-	
-	_expires = OS.get_system_time_secs() + int(data["expiresIn"])
-	_id_token = data["idToken"]
-	_refresh_token = data["refreshToken"]
-	_token_type = "refresh"
-	
-	_save_refresh_token()
+		_expires = OS.get_system_time_secs() + int(data["expiresIn"])
+		_id_token = data["idToken"]
+		_refresh_token = data["refreshToken"]
+		_token_type = "refresh"
+		
+		_save_refresh_token()
+		
+	remove_child(req)
+	req.queue_free()
 
 func _load_refresh_token():
 	var file = File.new()

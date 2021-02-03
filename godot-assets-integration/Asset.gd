@@ -8,6 +8,7 @@ var service: Service
 
 func _ready():
 	$ButtonContainer/InstallButton.visible = service._is_asset_downloaded(asset_id)
+	$ButtonContainer/RemoveButton.visible = $ButtonContainer/InstallButton.visible
 	$Padding/Content/Name.text = asset_name
 	$Padding/Content/Publisher.text = publisher
 	
@@ -27,11 +28,16 @@ func _load_image():
 
 func _on_DownloadButton_pressed():
 	$ButtonContainer/DownloadButton.disabled = true
+	$ButtonContainer/InstallButton.disabled = true
+	$ButtonContainer/RemoveButton.disabled = true
 	
 	var result = yield(service.download_asset(asset_id, asset_name), "completed")
 	
 	$ButtonContainer/DownloadButton.disabled = false
+	$ButtonContainer/InstallButton.disabled = false
+	$ButtonContainer/RemoveButton.disabled = false
 	$ButtonContainer/InstallButton.visible = result != null
+	$ButtonContainer/RemoveButton.visible = $ButtonContainer/InstallButton.visible 
 
 
 func _on_InstallButton_pressed():
@@ -42,3 +48,9 @@ func _on_FileDialog_dir_selected(dir: String):
 	$ButtonContainer/DownloadButton.disabled = false
 	
 	service.install_asset(asset_id, dir)
+
+func _on_RemoveButton_pressed():
+	service.remove_asset(asset_id)
+	
+	$ButtonContainer/InstallButton.visible = false
+	$ButtonContainer/RemoveButton.visible = false
