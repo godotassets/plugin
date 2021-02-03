@@ -5,6 +5,7 @@ var asset_id: String
 var asset_name: String
 var image_path: String
 var publisher: String
+var slug: String
 var service: Service
 
 func _ready():
@@ -55,3 +56,7 @@ func _on_RemoveButton_pressed():
 	
 	$ButtonContainer/InstallButton.visible = false
 	$ButtonContainer/RemoveButton.visible = false
+
+
+func _on_Name_pressed():
+	OS.shell_open(str("https://www.godotassets.com/asset/", slug))

@@ -25,6 +25,7 @@ func _refresh_list():
 		instance.asset_name = asset["asset"]["name"]
 		instance.image_path = asset["asset"]["imagePath"]
 		instance.publisher = asset["asset"]["publisher"]
+		instance.slug = asset["asset"]["slug"]
 		instance.service = _service
 		
 		$Layout/Scroll/Content/List.add_child(instance)

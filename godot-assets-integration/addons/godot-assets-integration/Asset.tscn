@@ -37,7 +37,7 @@ margin_bottom = 81.0
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Name" type="Label" parent="Padding/Content"]
+[node name="Name" type="LinkButton" parent="Padding/Content"]
 margin_top = 15.0
 margin_right = 277.0
 margin_bottom = 29.0
@@ -50,6 +50,7 @@ margin_right = 277.0
 margin_bottom = 47.0
 
 [node name="Publisher" type="Label" parent="Padding/Content"]
+modulate = Color( 0.752941, 0.752941, 0.752941, 1 )
 margin_top = 51.0
 margin_right = 277.0
 margin_bottom = 65.0
@@ -92,6 +93,7 @@ mode = 2
 access = 2
 current_dir = "/Dev/github/godotassets/plugin/godot-assets-integration"
 current_path = "/Dev/github/godotassets/plugin/godot-assets-integration/"
+[connection signal="pressed" from="Padding/Content/Name" to="." method="_on_Name_pressed"]
 [connection signal="pressed" from="ButtonContainer/DownloadButton" to="." method="_on_DownloadButton_pressed"]
 [connection signal="pressed" from="ButtonContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 [connection signal="pressed" from="ButtonContainer/InstallButton" to="." method="_on_InstallButton_pressed"]
