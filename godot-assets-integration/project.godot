@@ -9,20 +9,30 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Control",
+"class": "Page",
+"language": "GDScript",
+"path": "res://addons/godot-assets-integration/Page.gd"
+}, {
 "base": "Node",
 "class": "Service",
 "language": "GDScript",
-"path": "res://Service.gd"
+"path": "res://addons/godot-assets-integration/Service.gd"
 } ]
 _global_script_class_icons={
+"Page": "",
 "Service": ""
 }
 
 [application]
 
 config/name="godot-assets-integration"
-run/main_scene="res://Login.tscn"
+run/main_scene="res://addons/godot-assets-integration/Login.tscn"
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "godot-assets-integration" )
 
 [rendering]
 

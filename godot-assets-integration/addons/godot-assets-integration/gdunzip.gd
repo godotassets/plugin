@@ -1,3 +1,4 @@
+tool
 # MIT License
 # 
 # Copyright (c) 2018 Jelle Hermsen

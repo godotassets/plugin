@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/logo-256.png-f6f5ecf4f181fa34d2a80bea66ea58ea.stex"
+path="res://.import/logo-256.png-a9240ba62ede074d0d6e094452c5a0fd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://logo-256.png"
-dest_files=[ "res://.import/logo-256.png-f6f5ecf4f181fa34d2a80bea66ea58ea.stex" ]
+source_file="res://addons/godot-assets-integration/logo-256.png"
+dest_files=[ "res://.import/logo-256.png-a9240ba62ede074d0d6e094452c5a0fd.stex" ]
 
 [params]
 

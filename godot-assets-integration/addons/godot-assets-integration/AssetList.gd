@@ -1,8 +1,9 @@
-extends Control
+tool
+extends Page
 
-onready var _service: Service = load("res://Service.gd").new()
+onready var _service: Service = load("res://addons/godot-assets-integration/Service.gd").new()
 
-const AssetResource = preload("res://Asset.tscn")
+const AssetResource = preload("res://addons/godot-assets-integration/Asset.tscn")
 
 func _ready():
 	add_child(_service)
@@ -10,7 +11,7 @@ func _ready():
 
 func _on_LogoutButton_pressed():
 	_service.logout()
-	get_tree().change_scene("res://Login.tscn")
+	navigate("res://addons/godot-assets-integration/Login.tscn")
 	
 func _refresh_list():
 	$Layout/Padding/Header/RefreshButton.disabled = true
@@ -19,6 +20,7 @@ func _refresh_list():
 	
 	for asset in assets:
 		var instance = AssetResource.instance()
+
 		instance.asset_id = asset["asset"]["id"]
 		instance.asset_name = asset["asset"]["name"]
 		instance.image_path = asset["asset"]["imagePath"]
@@ -38,3 +40,7 @@ func _on_RefreshButton_pressed():
 		n.queue_free()
 		
 	_refresh_list()
+
+
+func _on_Logo_pressed():
+	OS.shell_open("https://www.godotassets.com")

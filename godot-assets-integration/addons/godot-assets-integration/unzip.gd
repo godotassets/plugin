@@ -1,3 +1,4 @@
+tool
 var storage_path
 var zip_file
 
@@ -8,7 +9,7 @@ var fileCount
 func unzip(sourceFile,destination):
 	zip_file = sourceFile
 	storage_path = destination
-	var gdunzip = load('res://gdunzip.gd').new()
+	var gdunzip = load('res://addons/godot-assets-integration/gdunzip.gd').new()
 	var loaded = gdunzip.load(zip_file)
 	if !loaded:
 		print('- Failed loading zip file')

@@ -1,7 +1,8 @@
+tool
 extends Node
 class_name Service
 
-onready var _unzip = load("res://unzip.gd").new()
+onready var _unzip = load("res://addons/godot-assets-integration/unzip.gd").new()
 
 const _path: String = "http://127.0.0.1:7071%s"
 const _file_folder = "user://godot-asset-integration/%s"

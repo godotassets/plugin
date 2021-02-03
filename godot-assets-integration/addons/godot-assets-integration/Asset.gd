@@ -1,3 +1,4 @@
+tool
 extends HBoxContainer
 
 var asset_id: String
