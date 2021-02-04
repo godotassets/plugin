@@ -23,7 +23,8 @@ func get_plugin_name():
 	return "Godot Assets Integration"
 	
 func get_plugin_icon():
-	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
+	return load("res://addons/godot-assets-integration/icon.png")
+#	return get_editor_interface().get_base_control().get_icon("Node", "EditorIcons")
 	
 func _main_screen_changed(screen_name):
 	if screen_name == get_plugin_name():

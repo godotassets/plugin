@@ -11,7 +11,7 @@ var service: Service
 func _ready():
 	$ButtonContainer/InstallButton.visible = service._is_asset_downloaded(asset_id)
 	$ButtonContainer/RemoveButton.visible = $ButtonContainer/InstallButton.visible
-	$Padding/Content/Name.text = asset_name
+	$Padding/Content/Name.bbcode_text = str("[url]", asset_name, "[/url]");
 	$Padding/Content/Publisher.text = publisher
 	
 	_load_image()
@@ -57,6 +57,5 @@ func _on_RemoveButton_pressed():
 	$ButtonContainer/InstallButton.visible = false
 	$ButtonContainer/RemoveButton.visible = false
 
-
-func _on_Name_pressed():
+func _on_Name_meta_clicked(meta):
 	OS.shell_open(str("https://www.godotassets.com/asset/", slug))
