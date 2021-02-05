@@ -1,18 +1,34 @@
 tool
 extends Page
 
-onready var _service: Service = load("res://addons/godot-assets-integration/Service.gd").new()
+const AssetResource = preload("res://addons/godot-assets-integration/asset.tscn")
 
-const AssetResource = preload("res://addons/godot-assets-integration/Asset.tscn")
+onready var _service: Service = load("res://addons/godot-assets-integration/service.gd").new()
 
 func _ready():
 	add_child(_service)
 	_refresh_list()
 
+
+func _on_Logo_pressed():
+	OS.shell_open("https://www.godotassets.com")
+
+
 func _on_LogoutButton_pressed():
 	_service.logout()
-	navigate("res://addons/godot-assets-integration/Login.tscn")
+	navigate("res://addons/godot-assets-integration/login.tscn")
+
+
+func _on_RefreshButton_pressed():
+	var list = $Layout/Scroll/Content/List
 	
+	for n in list.get_children():
+		list.remove_child(n)
+		n.queue_free()
+		
+	_refresh_list()
+
+
 func _refresh_list():
 	$Layout/Padding/Header/RefreshButton.disabled = true
 	
@@ -32,16 +48,3 @@ func _refresh_list():
 	
 	$Layout/Padding/Header/RefreshButton.disabled = false
 
-
-func _on_RefreshButton_pressed():
-	var list = $Layout/Scroll/Content/List
-	
-	for n in list.get_children():
-		list.remove_child(n)
-		n.queue_free()
-		
-	_refresh_list()
-
-
-func _on_Logo_pressed():
-	OS.shell_open("https://www.godotassets.com")

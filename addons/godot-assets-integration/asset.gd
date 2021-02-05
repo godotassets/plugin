@@ -15,7 +15,8 @@ func _ready():
 	$Padding/Content/Publisher.text = publisher
 	
 	_load_image()
-	
+
+
 func _load_image():
 	var image = yield(service.load_image_from_url(image_path), "completed")
 	
@@ -42,14 +43,19 @@ func _on_DownloadButton_pressed():
 	$ButtonContainer/RemoveButton.visible = $ButtonContainer/InstallButton.visible 
 
 
-func _on_InstallButton_pressed():
-	$FileDialog.popup_centered(Vector2(720,480))
-
 func _on_FileDialog_dir_selected(dir: String):
 	$ButtonContainer/InstallButton.disabled = false
 	$ButtonContainer/DownloadButton.disabled = false
 	
 	service.install_asset(asset_id, dir)
+
+func _on_InstallButton_pressed():
+	$FileDialog.popup_centered(Vector2(720,480))
+
+
+func _on_Name_meta_clicked(meta: String):
+	OS.shell_open(str("https://www.godotassets.com/asset/", slug))
+
 
 func _on_RemoveButton_pressed():
 	service.remove_asset(asset_id)
@@ -57,5 +63,3 @@ func _on_RemoveButton_pressed():
 	$ButtonContainer/InstallButton.visible = false
 	$ButtonContainer/RemoveButton.visible = false
 
-func _on_Name_meta_clicked(meta):
-	OS.shell_open(str("https://www.godotassets.com/asset/", slug))

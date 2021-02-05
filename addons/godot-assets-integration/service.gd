@@ -1,11 +1,9 @@
 tool
-extends Node
 class_name Service
-
-onready var _unzip = load("res://addons/godot-assets-integration/unzip.gd").new()
+extends Node
 
 const _path: String = "http://127.0.0.1:7071%s"
-const _file_folder = "user://godot-asset-integration/%s"
+const _file_folder = "user://%s"
 const _asset_folder = _file_folder % "assets/%s"
 const _file_path = _file_folder % "token"
 
@@ -14,77 +12,11 @@ var _id_token: String = ""
 var _token_type: String = ""
 var _refresh_token: String = ""
 
+onready var _unzip = load("res://addons/godot-assets-integration/unzip.gd").new()
+
 func _ready():
 	_load_refresh_token()
-	
-func login(access_token: String):
-	_refresh_token = access_token
-	_token_type = "custom"
-	
-	yield(_update_id_token(), "completed")
-	
-	return _id_token != ""
-	
-func logout():
-	_clear_refresh_token()
-	_refresh_token = ""
-	_token_type = ""
-	
-func is_logged_in():
-	return _refresh_token != ""
-	
-func get_list():
-	var update = _update_id_token()
-	
-	if update is GDScriptFunctionState:
-		yield(update, "completed")
-	
-	var req = HTTPRequest.new()
-	add_child(req)
-	
-	var url = _path % "/api/purchase"
-	var headers = ["Authorization: Bearer %s" % _id_token]
-	
-	req.request(url, headers, true, HTTPClient.METHOD_GET)
-	
-	var response = yield(req, "request_completed")
-	var response_code = response[1]
-	var body = response[3]
-	
-	var result = null
 
-	if (response_code != 200):
-		var msg = "godot-assets-integration received response_code of %s from server" % response_code
-		_error(msg)
-	else:		
-		result = JSON.parse(body.get_string_from_utf8()).result
-		
-	remove_child(req)
-	req.queue_free()
-	
-	return result
-
-func load_image_from_url(url: String):
-	var req = HTTPRequest.new()
-	add_child(req)
-	
-	req.request(url, [], true, HTTPClient.METHOD_GET)
-	
-	var result = yield(req, "request_completed")
-	var response_code = result[1]
-	var body = result[3]
-	
-	if response_code != 200:
-		_error("Unable to load image %s" % url)
-		return null
-	
-	var image = Image.new()
-	image.load_jpg_from_buffer(body)
-	
-	remove_child(req)
-	req.queue_free()
-	
-	return image
 
 func download_asset(asset_id: String, asset_name: String):
 	var update = _update_id_token()
@@ -138,18 +70,101 @@ func download_asset(asset_id: String, asset_name: String):
 	
 	return response
 
+
 func install_asset(asset_id: String, directory: String):
 	var asset_file = _find_asset_download_file(asset_id)
 	
 	_unzip.unzip(asset_file, str(directory, "/"))
+
+
+func is_logged_in():
+	return _refresh_token != ""
+
+
+func get_list():
+	var update = _update_id_token()
+	
+	if update is GDScriptFunctionState:
+		yield(update, "completed")
+	
+	var req = HTTPRequest.new()
+	add_child(req)
+	
+	var url = _path % "/api/purchase"
+	var headers = ["Authorization: Bearer %s" % _id_token]
+	
+	req.request(url, headers, true, HTTPClient.METHOD_GET)
+	
+	var response = yield(req, "request_completed")
+	var response_code = response[1]
+	var body = response[3]
+	
+	var result = null
+
+	if (response_code != 200):
+		var msg = "godot-assets-integration received response_code of %s from server" % response_code
+		_error(msg)
+	else:		
+		result = JSON.parse(body.get_string_from_utf8()).result
+		
+	remove_child(req)
+	req.queue_free()
+	
+	return result
+
+
+func login(access_token: String):
+	_refresh_token = access_token
+	_token_type = "custom"
+	
+	yield(_update_id_token(), "completed")
+	
+	return _id_token != ""
+
+
+func logout():
+	_clear_refresh_token()
+	_refresh_token = ""
+	_token_type = ""
+
+
+func load_image_from_url(url: String):
+	var req = HTTPRequest.new()
+	add_child(req)
+	
+	req.request(url, [], true, HTTPClient.METHOD_GET)
+	
+	var result = yield(req, "request_completed")
+	var response_code = result[1]
+	var body = result[3]
+	
+	if response_code != 200:
+		_error("Unable to load image %s" % url)
+		return null
+	
+	var image = Image.new()
+	image.load_jpg_from_buffer(body)
+	
+	remove_child(req)
+	req.queue_free()
+	
+	return image
+
 
 func remove_asset(asset_id: String):
 	var path = _find_asset_download_file(asset_id)
 	
 	Directory.new().remove(path)
 
-func _is_asset_downloaded(asset_id: String):
-	return _find_asset_download_file(asset_id ) != null
+
+func _clear_refresh_token():
+	Directory.new().remove(_file_path)
+
+
+func _error(message: String):
+	printerr(message)
+	push_error(message)
+
 
 func _find_asset_download_file(asset_id: String):
 	var result = null
@@ -173,6 +188,22 @@ func _find_asset_download_file(asset_id: String):
 	dir.list_dir_end()
 	
 	return result
+
+
+func _is_asset_downloaded(asset_id: String):
+	return _find_asset_download_file(asset_id ) != null
+
+
+func _load_refresh_token():
+	var file = File.new()
+	var err = file.open_encrypted_with_pass(_file_path, File.READ, OS.get_unique_id())
+	
+	if (err == OK):
+		_refresh_token = file.get_as_text()
+		_token_type = "refresh"
+		
+		file.close()
+
 
 func _update_id_token():
 	if (OS.get_system_time_secs() < _expires):
@@ -210,16 +241,7 @@ func _update_id_token():
 	remove_child(req)
 	req.queue_free()
 
-func _load_refresh_token():
-	var file = File.new()
-	var err = file.open_encrypted_with_pass(_file_path, File.READ, OS.get_unique_id())
-	
-	if (err == OK):
-		_refresh_token = file.get_as_text()
-		_token_type = "refresh"
-		
-		file.close()
-	
+
 func _save_refresh_token():
 	var file = File.new()
 	
@@ -233,9 +255,3 @@ func _save_refresh_token():
 	else:
 		_error("Unable to store token")
 
-func _clear_refresh_token():
-	Directory.new().remove(_file_path)
-
-func _error(message: String):
-	printerr(message)
-	push_error(message)

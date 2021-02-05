@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/godot-assets-integration/logo-256.png" type="Texture" id=1]
-[ext_resource path="res://addons/godot-assets-integration/Login.gd" type="Script" id=2]
+[ext_resource path="res://addons/godot-assets-integration/login.gd" type="Script" id=2]
 
 [node name="Login" type="Control"]
 anchor_right = 1.0
@@ -55,7 +55,5 @@ margin_top = 446.0
 margin_right = 256.0
 margin_bottom = 460.0
 text = "How do I get a token?"
-
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
 [connection signal="pressed" from="CenterColumn/LoginButton" to="." method="_on_LoginButton_pressed"]
 [connection signal="pressed" from="CenterColumn/LinkButton" to="." method="_on_LinkButton_pressed"]
