@@ -2,7 +2,7 @@
 
 ### Welcome to the home of the Godot Engine plugin for https://www.godotassets.com
 
-Similiar to the official Godot Asset Library, we wanted to provide an easy way to access your assets from our store.
+Similar to the official Godot Asset Library, we wanted to provide an easy way to access your assets from our store.
 
 Once you have the plugin installed, follow these simple steps to access your account.
 
