@@ -2,7 +2,7 @@ tool
 class_name Service
 extends Node
 
-const _path: String = "http://127.0.0.1:7071%s"
+const _path: String = "https://godot.azurewebsites.net%s"
 const _file_folder = "user://%s"
 const _asset_folder = _file_folder % "assets/%s"
 const _file_path = _file_folder % "token"
