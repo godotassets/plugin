@@ -1,3 +1,6 @@
+# This plugin will no longer work
+Since Godot is going to be doing an official, full-fledge asset store we're taking our store offline and once the site is down it will no longer serve its function. For the time being at least, we'll leave the repo available in case someone might find it useful for examples.
+
 # Godot Assets Integration Plugin
 
 ### Welcome to the home of the Godot Engine plugin for https://www.godotassets.com
